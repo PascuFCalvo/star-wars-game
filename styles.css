@@ -114,6 +114,17 @@ body {
   font-family: roboto;
 }
 
+.controls {
+  position: absolute;
+  top: 0;
+  left: 0;
+  color: yellow;
+  font-size: 20px;
+  margin: 10px;
+  font-weight: bold;
+  font-family: roboto;
+}
+
 .startButton:hover {
   color: gold;
   scale: 1.1;

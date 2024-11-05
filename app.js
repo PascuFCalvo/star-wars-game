@@ -109,7 +109,6 @@ function createEnemy() {
     clearInterval(shootInterval);
   });
 }
-
 function createDeathStar() {
   let deathStar = document.createElement("div");
   deathStar.classList.add("deathStar");
@@ -134,7 +133,6 @@ function createDeathStar() {
     clearInterval(shootInterval);
   });
 }
-
 function createABullet(width, height) {
   let bullet = document.createElement("div");
   let bullet2 = document.createElement("div");
@@ -236,7 +234,6 @@ function createMissile(width, height) {
     missile.remove();
   });
 }
-
 function createEnemyBullet(width, height) {
   let enemies = document.querySelectorAll(".enemy"); // Selecciona todos los enemigos actuales
   enemies.forEach((enemy) => {
@@ -393,6 +390,7 @@ function checkBulletCollisionWithDeathStar() {
         deathStar.setAttribute("data-life", currentLife);
         console.log("Death Star life remaining:", currentLife); // Verifica en consola
 
+        deathStarGetDamage(deathStar);
         // Si la vida llega a cero, explota la Death Star
         if (currentLife <= 0) {
           setDeathStarExplosion(deathStar);
@@ -509,6 +507,7 @@ function checkMissileCollisionWithDeathStar() {
       ) {
         console.log("Collision with Death Star");
         missile.remove();
+        deathStarGetDamage(deathStar);
 
         // Obtén y reduce la vida de la Death Star
         let currentLife = parseInt(deathStar.getAttribute("data-life"));
@@ -600,6 +599,21 @@ function getDamage() {
     player.style.filter = "brightness(100%)";
   }, 500);
 }
+
+function enemyGetDamage(enemy) {
+  enemy.style.filter = "brightness(200%)";
+  setTimeout(() => {
+    enemy.style.filter = "brightness(100%)";
+  }, 200);
+}
+
+function deathStarGetDamage(deathStar) {
+  deathStar.style.filter = "brightness(200%)";
+  setTimeout(() => {
+    deathStar.style.filter = "brightness(100%)";
+  }, 200);
+}
+
 function gameOver() {
   // Recargar la página para reiniciar todo el juego
   location.reload();
