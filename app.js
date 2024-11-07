@@ -15,7 +15,6 @@ let spawnTime = 4000;
 let deathStarSpawnTime = 10000;
 export let deathStarBulletSpeed = 5;
 export let enemyBulletSpeed = 4;
-let enemySpeed = 10;
 let isDead = false;
 let lifes = 5;
 let damageCooldown = false; // Variable para evitar llamadas simultáneas
@@ -65,7 +64,7 @@ export function movePlayer(e) {
   }
 }
 
-export function moveEnemy(enemy) {
+export function moveEnemy(enemy, enemySpeed) {
   enemy.style.animation = `moveEnemy ${enemySpeed}s linear`;
 }
 
@@ -95,12 +94,13 @@ export function start() {
 }
 
 export function createEnemy() {
+  let enemySpeed = "10";
   let enemy = document.createElement("div");
   enemy.classList.add("enemy");
   let randomPosition = Math.floor(Math.random() * 750);
   enemy.style.bottom = randomPosition + "px";
   gameContainer.appendChild(enemy);
-  moveEnemy(enemy);
+  moveEnemy(enemy, enemySpeed);
 
   let shootingInterval = 2000;
 
@@ -118,13 +118,14 @@ export function createEnemy() {
   });
 }
 export function createDeathStar() {
+  let enemySpeed = "30";
   let deathStar = document.createElement("div");
   deathStar.classList.add("deathStar");
   deathStar.setAttribute("data-life", "40"); // Asignar vida inicial de 10 golpes
   let randomPosition = Math.floor(Math.random() * 600);
   deathStar.style.bottom = randomPosition + "px";
   gameContainer.appendChild(deathStar);
-  moveEnemy(deathStar);
+  moveEnemy(deathStar, enemySpeed);
 
   let shootingInterval = 3000;
 
@@ -145,9 +146,11 @@ export function createDeathStar() {
 export function shoot(e) {
   if (e.code === "Space") {
     createABullet("50", "2");
+    audioLaserShoot();
   }
   if (e.code === "KeyM") {
     createMissile("50", "10");
+    audioMissileShoot();
   }
 }
 export function createLife(lifes) {
@@ -182,21 +185,41 @@ export function decreaseLife(damage) {
 export function updateLifeDisplay() {
   let life = document.querySelector(".life");
   if (life) {
-    // Redondear la vida hacia abajo para mostrar un número entero de corazones
     life.textContent = "❤️".repeat(Math.floor(lifes));
   }
 }
 export function setExplosion(enemy) {
-  enemy.classList.remove("enemy");
-  enemy.classList.add("explosion");
-  enemy.style.transition = "width 0.5s ease, height 0.5s ease";
-  enemy.style.width = "150px";
-  enemy.style.height = "150px";
+  if (enemy.classList.contains("deathStar")) {
+    playExplosion("deathStar");
+    animateExplosion(enemy, 300); // Tamaño de explosión para Death Star
+  } else {
+    playExplosion("enemy");
+    animateExplosion(enemy, 150); // Tamaño de explosión para enemigo normal
+  }
+}
+
+function playExplosion(type) {
+  let audio;
+  if (type === "deathStar") {
+    audio = new Audio("ds-explosion.mp3");
+  } else {
+    audio = new Audio("explosion.mp3");
+  }
+  audio.play();
+}
+
+function animateExplosion(element, size) {
+  element.classList.remove("enemy", "deathStar");
+  element.classList.add("explosion");
+  element.style.transition = "width 0.5s ease, height 0.5s ease";
+  element.style.width = `${size}px`;
+  element.style.height = `${size}px`;
 
   setTimeout(() => {
-    enemy.remove();
+    element.remove();
   }, 500);
 }
+
 export function setDeathStarExplosion(deathStar) {
   deathStar.classList.remove("deathStar");
   deathStar.classList.add("explosion");
@@ -215,7 +238,7 @@ export function getDamage() {
   player.style.filter = "brightness(200%)";
   setTimeout(() => {
     player.style.filter = "brightness(100%)";
-  }, 500);
+  }, 200);
 }
 export function enemyGetDamage(enemy) {
   enemy.style.filter = "brightness(200%)";
@@ -235,5 +258,13 @@ function gameOver() {
 }
 function startAudio() {
   let audio = new Audio("DuelOfFates.mp3");
+  audio.play();
+}
+function audioLaserShoot() {
+  let audio = new Audio("laser.mp3");
+  audio.play();
+}
+function audioMissileShoot() {
+  let audio = new Audio("misil.mp3");
   audio.play();
 }

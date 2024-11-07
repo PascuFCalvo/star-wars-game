@@ -1,6 +1,5 @@
 import {
   setExplosion,
-  setDeathStarExplosion,
   increaseScore,
   decreaseLife,
   getDamage,
@@ -29,13 +28,11 @@ class CollisionChecker {
       deathStarGetDamage(target);
 
       if (currentLife <= 0) {
-        setDeathStarExplosion(target);
-        setTimeout(() => target.remove(), 500);
+        setExplosion(target); // Usar setExplosion para Death Star también
         increaseScore("increase");
       }
     } else {
       setExplosion(target);
-      setTimeout(() => target.remove(), 500);
       increaseScore("increase");
     }
   }
@@ -128,13 +125,11 @@ class CollisionChecker {
       deathStarGetDamage(target);
 
       if (currentLife <= 0) {
-        setDeathStarExplosion(target);
-        setTimeout(() => target.remove(), 500);
+        setExplosion(target); // Usar setExplosion para Death Star también
         increaseScore("increase");
       }
     } else {
       setExplosion(target);
-      setTimeout(() => target.remove(), 500);
       increaseScore("increase");
     }
   }
